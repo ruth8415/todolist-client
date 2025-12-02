@@ -14,49 +14,91 @@ function App() {
     e.preventDefault();
     if (newTodo.trim()) {
       await service.addTask(newTodo);
-      setNewTodo("");//clear input
-      await getTodos();//refresh tasks list (in order to see the new one)
+      setNewTodo("");
+      await getTodos();
     }
   }
 
   async function updateCompleted(todo, isComplete) {
     await service.setCompleted(todo.id, isComplete);
-    await getTodos();//refresh tasks list (in order to see the updated one)
+    await getTodos();
   }
 
   async function deleteTodo(id) {
     await service.deleteTask(id);
-    await getTodos();//refresh tasks list
+    await getTodos();
   }
 
   useEffect(() => {
     getTodos();
   }, []);
 
+  // Get current date in Hebrew
+  const today = new Date();
+  const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const hebrewDate = today.toLocaleDateString('he-IL', dateOptions);
+
+  // Calculate progress
+  const completedCount = todos.filter(t => t.isComplete).length;
+  const totalCount = todos.length;
+  const progressPercent = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
   return (
     <section className="todoapp">
       <header className="header">
-        <h1>todos</h1>
-        <form onSubmit={createTodo}>
-          <input className="new-todo" placeholder="Well, let's take on the day" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} />
+        <h1>המשימות שלי</h1>
+        <p className="date-display">{hebrewDate}</p>
+        
+        <form onSubmit={createTodo} className="input-container">
+          <input 
+            className="new-todo" 
+            placeholder="הוסיפי משימה חדשה..." 
+            value={newTodo} 
+            onChange={(e) => setNewTodo(e.target.value)} 
+          />
+          <button type="submit" className="add-btn">
+            + הוסיפי
+          </button>
         </form>
       </header>
-      <section className="main" style={{ display: "block" }}>
-        <ul className="todo-list">
-          {todos.map(todo => {
-            return (
+
+      <section className="main">
+        {todos.length === 0 ? (
+          <div className="empty-state">
+            <p>אין משימות עדיין. התחילי להוסיף!</p>
+          </div>
+        ) : (
+          <ul className="todo-list">
+            {todos.map(todo => (
               <li className={todo.isComplete ? "completed" : ""} key={todo.id}>
                 <div className="view">
-                  <input className="toggle" type="checkbox" checked={todo.isComplete} onChange={(e) => updateCompleted(todo, e.target.checked)} />
+                  <input 
+                    className="toggle" 
+                    type="checkbox" 
+                    checked={todo.isComplete} 
+                    onChange={(e) => updateCompleted(todo, e.target.checked)} 
+                  />
                   <label>{todo.name}</label>
                   <button className="destroy" onClick={() => deleteTodo(todo.id)}></button>
                 </div>
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        )}
       </section>
-    </section >
+
+      {todos.length > 0 && (
+        <>
+          <div className="progress-container">
+            <div className="progress-bar" style={{ width: `${progressPercent}%` }}></div>
+          </div>
+          <div className="stats">
+            <span>{completedCount} מתוך {totalCount} הושלמו</span>
+            <span>{Math.round(progressPercent)}%</span>
+          </div>
+        </>
+      )}
+    </section>
   );
 }
 
