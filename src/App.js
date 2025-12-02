@@ -46,26 +46,29 @@ function App() {
   return (
     <section className="todoapp">
       <header className="header">
-        <h1>המשימות שלי</h1>
-        <p className="date-display">{hebrewDate}</p>
+        <h1>✨ המשימות שלי</h1>
+        <p className="date-display">📅 {hebrewDate}</p>
         
-        <form onSubmit={createTodo} className="input-container">
-          <input 
-            className="new-todo" 
-            placeholder="הוסיפי משימה חדשה..." 
-            value={newTodo} 
-            onChange={(e) => setNewTodo(e.target.value)} 
-          />
-          <button type="submit" className="add-btn">
-            + הוסיפי
-          </button>
-        </form>
+        <div className="glass-card">
+          <form onSubmit={createTodo} className="input-container">
+            <input 
+              className="new-todo" 
+              placeholder="מה המשימה הבאה שלך? ✏️" 
+              value={newTodo} 
+              onChange={(e) => setNewTodo(e.target.value)} 
+            />
+            <button type="submit" className="add-btn">
+              ✨ הוסיפי
+            </button>
+          </form>
+        </div>
       </header>
 
       <section className="main">
         {todos.length === 0 ? (
           <div className="empty-state">
-            <p>אין משימות עדיין. התחילי להוסיף!</p>
+            <span className="emoji">📝</span>
+            <p>אין משימות עדיין... הזמן להתחיל!</p>
           </div>
         ) : (
           <ul className="todo-list">
@@ -88,15 +91,15 @@ function App() {
       </section>
 
       {todos.length > 0 && (
-        <>
+        <div className="progress-section">
           <div className="progress-container">
             <div className="progress-bar" style={{ width: `${progressPercent}%` }}></div>
           </div>
           <div className="stats">
-            <span>{completedCount} מתוך {totalCount} הושלמו</span>
-            <span>{Math.round(progressPercent)}%</span>
+            <span>🎯 {completedCount} מתוך {totalCount} הושלמו</span>
+            <span className="percentage">{Math.round(progressPercent)}%</span>
           </div>
-        </>
+        </div>
       )}
     </section>
   );
