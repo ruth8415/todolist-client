@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // יצירת instance של axios עם Base URL ל-API שלנו
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5290',
+  baseURL: process.env.REACT_APP_API_URL || 'https://todo-api-server-aezs.onrender.com',
 });
 
 // interceptor לטיפול בשגיאות (לדוגמה 401)
